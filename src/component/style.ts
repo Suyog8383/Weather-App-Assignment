@@ -34,6 +34,20 @@ export const Main = styled.div`
   padding: 0 2rem;
   text-align: center;
 `;
+export const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: auto auto auto;
+  background-color: #2196f3;
+  padding: 10px;
+`;
+
+export const GridItem = styled.div`
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  font-size: 30px;
+  text-align: center;
+`;
 
 export const Button = styled.button`
   background: "palevioletred";

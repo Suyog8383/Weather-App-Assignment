@@ -6,34 +6,57 @@ import {
   Container,
   Container2,
   ContainerMain,
+  GridContainer,
+  GridItem,
   Input,
   Main,
 } from "./style";
 
-function Home() {
-  const [city, setCity] = useState("");
-  const [search, setSearch] = useState("");
-  const [data, setData] = useState([]);
-  const [name, setName] = useState(null);
-  const [visi, setVisi] = useState(null);
-  const [sun, setSun] = useState({});
+function Home(): JSX.Element {
+  const [city, setCity] = useState<string>("");
+  const [search, setSearch] = useState<string>("");
+  const [data, setData] = useState<any>({});
+  const [name, setName] = useState<string | null>(null);
+  const [visi, setVisi] = useState<number | null>(null);
+  const [sun, setSun] = useState<any>({});
+  const [isFetch, setisFetch] = useState<boolean>(false);
+  const [desc, setDesc] = useState<string | undefined>();
+  const [desc1, setDesc1] = useState<string | undefined>();
   useEffect(() => {
     axios
-      .get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${search}&appid=4b0305f8fc8f0b9f50ce09c4ed20a628`
+      .get<any>(
+        `https://api.openweathermap.org/data/2.5/weather?q=${search}&units=metric&appid=4b0305f8fc8f0b9f50ce09c4ed20a628`
       )
       .then((response) => {
         setData(response.data.main),
           setName(response.data.name),
           setSun(response.data.sys),
-          setVisi(response.data.visibility);
+          setVisi(response.data.visibility),
+          setDesc(response.data.weather[0].description),
+          setDesc1(response.data.weather[0].main),
+          console.log(response.data.weather[0].main);
       });
   }, [search]);
-
+  useEffect(() => {
+    if (desc1 == "Clear") {
+      document.body.style.backgroundImage = "url('src/assets/clear.jpg')";
+    } else if (desc1 == "Smoke") {
+      document.body.style.backgroundImage = "url('src/assets/sunny.jpg')";
+    } else if (desc1 == "Clouds") {
+      document.body.style.backgroundImage = "url('src/assets/cloud.jpg')";
+    } else if (desc1 == "Rain") {
+      document.body.style.backgroundImage = "url('src/assets/rain.jpg')";
+    } else if (desc1 == "Snow") {
+      document.body.style.backgroundImage = "url('src/assets/snow.jpg')";
+    } else if (desc1 == "Thunderstorm") {
+      document.body.style.backgroundImage =
+        "url('src/assets/thunderstorm.jpg')";
+    }
+  });
   function handleSearch(): any {
     setSearch(city);
+    setisFetch(true);
   }
-
   return (
     <Main>
       <ContainerMain>
@@ -47,52 +70,70 @@ function Home() {
           />
           <Button onClick={handleSearch}>Submit</Button>
         </Container>
-
-        <Container2>
-          <Child>
-            <p>Name:{name}</p>
-            <p>Pressure:{data.pressure}</p>
-            <p>Tempreture:{data.temp}</p>
-          </Child>
-          <Child>
-            <p>Sunrise:{sun.sunrise}</p>
-            <p>Sunset:{sun.sunset}</p>
-            <p>Visibility:{visi}</p>
-          </Child>
-        </Container2>
+        {isFetch && (
+          <Container2>
+            <Container>
+              <section style={{ backgroundColor: "#f5f6f7", width: "235px" }}>
+                <div className="container py-5 ">
+                  <div className="row d-flex justify-content-center align-items-center">
+                    <div className="col-md-10 col-lg-8 col-xl-6">
+                      <div
+                        className="card bg-dark text-white"
+                        style={{ borderRadius: "40px" }}
+                      >
+                        <div
+                          className="bg-image"
+                          style={{ borderRadius: "35px" }}
+                        >
+                          <div
+                            className="mask"
+                            style={{
+                              backgroundColor: "rgba(190, 216, 232, .5)",
+                            }}
+                          ></div>
+                        </div>
+                        <div className="card-img-overlay text-dark p-5">
+                          <h4 className="mb-0">
+                            {name}, {sun.country}
+                          </h4>
+                          <p className="display-2 my-3">{data.temp}°C</p>
+                          <p className="mb-2">
+                            Feels Like: <strong>{data.feels_like} °C</strong>
+                          </p>{" "}
+                          <p className="mb-2">
+                            Humidity: <strong>{data.humidity}</strong>
+                          </p>
+                          <h5>{desc}</h5>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </Container>
+            <GridContainer>
+              <GridItem>
+                <p>Name:{name}</p>
+              </GridItem>
+              <GridItem>
+                <p>Pressure:{data.pressure}</p>
+              </GridItem>
+              <GridItem>
+                <p>Tempreture:{data.temp}</p>
+              </GridItem>
+              <GridItem>
+                <p>Sunrise:{sun.sunrise}</p>
+              </GridItem>
+              <GridItem>
+                <p>Sunset:{sun.sunset}</p>
+              </GridItem>
+              <GridItem>
+                <p>Visibility:{visi}</p>
+              </GridItem>
+            </GridContainer>
+          </Container2>
+        )}
       </ContainerMain>
-      <section className="vh-100" style={{ backgroundColor: "#f5f6f7" }}>
-        <div className="container py-5 h-100">
-          <div className="row d-flex justify-content-center align-items-center h-100">
-            <div className="col-md-10 col-lg-8 col-xl-6">
-              <div
-                className="card bg-dark text-white"
-                style={{ borderRadius: "40px" }}
-              >
-                <div className="bg-image" style={{ borderRadius: "35px" }}>
-                  <img
-                    src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-weather/draw1.webp"
-                    className="card-img"
-                    alt="weather"
-                  />
-                  <div
-                    className="mask"
-                    style={{ backgroundColor: "rgba(190, 216, 232, .5)" }}
-                  ></div>
-                </div>
-                <div className="card-img-overlay text-dark p-5">
-                  <h4 className="mb-0">Juneau, Alaska, US</h4>
-                  <p className="display-2 my-3">1.28°C</p>
-                  <p className="mb-2">
-                    Feels Like: <strong>-1.08 °C</strong>
-                  </p>
-                  <h5>Snowy</h5>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </Main>
   );
 }
