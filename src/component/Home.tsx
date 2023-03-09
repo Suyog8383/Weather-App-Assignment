@@ -64,7 +64,7 @@ function Home(): JSX.Element {
           <h1>Weather App</h1>
           <Input
             type="text"
-            defaultValue="City"
+            placeholder="Enter City Name..."
             value={city}
             onChange={(e) => setCity(e.target.value)}
           />
