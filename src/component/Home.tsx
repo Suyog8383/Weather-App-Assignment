@@ -33,8 +33,7 @@ function Home(): JSX.Element {
           setSun(response.data.sys),
           setVisi(response.data.visibility),
           setDesc(response.data.weather[0].description),
-          setDesc1(response.data.weather[0].main),
-          console.log(response.data.weather[0].main);
+          setDesc1(response.data.weather[0].main);
       });
   }, [search]);
   useEffect(() => {
@@ -64,7 +63,7 @@ function Home(): JSX.Element {
           <h1>Weather App</h1>
           <Input
             type="text"
-            defaultValue="City"
+            placeholder="Enter City Name..."
             value={city}
             onChange={(e) => setCity(e.target.value)}
           />
